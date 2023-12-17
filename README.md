@@ -1,5 +1,11 @@
 #  🎯𝐋𝐏𝐔 𝐂𝐆𝐏𝐀 𝐂𝐚𝐥𝐜𝐮𝐥𝐚𝐭𝐨𝐫- 𝐀 𝐉𝐞𝐭𝐩𝐚𝐜𝐤 𝐂𝐨𝐦𝐩𝐨𝐬𝐞 𝐏𝐫𝐨𝐣𝐞𝐜𝐭🌟
 
+# Download the app.
+[![CGPACalcApp](https://img.shields.io/badge/Click_Here-LPUCgpaCalc_App-orange)](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/blob/master/LpuCgpaCalc.apk)
+
+# App Demo Video
+[![CGPACalcApp](https://img.shields.io/badge/Click_Here-App_Demo_Video_App-blue)](https://www.linkedin.com/posts/skp3214_lpu-cgpa-calculator-activity-7142042621291417600-g0r5?utm_source=share&utm_medium=member_desktop)
+
 ## 🌐𝑲𝒆𝒚 𝑭𝒆𝒂𝒕𝒖𝒓𝒆𝒔:
 
 ### 🌟𝗖𝗚𝗣𝗔 𝗖𝗮𝗹𝗰𝘂𝗹𝗮𝘁𝗶𝗼𝗻: 
@@ -22,4 +28,15 @@ Modern UI toolkit for building beautiful and expressive user interfaces.
 Powerful programming language known for its conciseness and expressiveness.
 ### ⚡️𝗠𝗮𝘁𝗲𝗿𝗶𝗮𝗹 𝗗𝗲𝘀𝗶𝗴𝗻: 
 Google's design system for creating consistent and appealing user experiences.
+
+## Project Preview
+
+![Screenshot (500)](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/assets/95349420/ccb5fd44-9965-471a-8d2f-d305df4a1cf9)
+
+
+![Screenshot (501)](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/assets/95349420/c58dd9a1-7722-4b30-95ea-ac9bb0557c7b)
+
+
+![Screenshot (502)](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/assets/95349420/ee37a6b9-8612-4685-89fc-95b0edd10296)
+
 
