@@ -1,7 +1,6 @@
 package com.skp3214.cgpacalc
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -24,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,15 +48,15 @@ fun ByNumber() {
 
     fun gradeToPoint(mark: String): Double {
         val marksInt = mark.toIntOrNull()
-        return when {
-            marksInt in 90..100 -> 10.0
-            marksInt in 80 until 90 -> 9.0
-            marksInt in 70 until 80 -> 8.0
-            marksInt in 60 until 70 -> 7.0
-            marksInt in 50 until 60 -> 6.0
-            marksInt in 40 until 50 -> 5.0
-            marksInt in 34 until 40 -> 4.0
-            marksInt in 0 until 34 -> 0.0
+        return when (marksInt) {
+            in 90..100 -> 10.0
+            in 80 until 90 -> 9.0
+            in 70 until 80 -> 8.0
+            in 60 until 70 -> 7.0
+            in 50 until 60 -> 6.0
+            in 40 until 50 -> 5.0
+            in 34 until 40 -> 4.0
+            in 0 until 34 -> 0.0
             else -> 0.0
         }
     }
@@ -161,7 +158,7 @@ fun ByNumber() {
         val contextForToast = LocalContext.current.applicationContext
 
         Row(modifier = Modifier.padding(top = 25.dp)) {
-            val context = LocalContext.current
+            LocalContext.current
             ElevatedButton(
                 onClick = {
                     var creditGot = 0.0
@@ -173,7 +170,7 @@ fun ByNumber() {
                         val credit = creditValues[i]
 
                         // Validate mark input
-                        if (!mark.isNullOrBlank()) {
+                        if (mark.isNotBlank()) {
                             val marksInt = mark.toIntOrNull()
                             if (marksInt == null || marksInt !in 0..100) {
                                 validInput = false
@@ -183,7 +180,7 @@ fun ByNumber() {
                         }
 
                         // Validate credit input
-                        if (!credit.isNullOrBlank()) {
+                        if (credit.isNotBlank()) {
                             if (!credit.matches("\\d+".toRegex())) {
                                 validInput = false
                                 Toast.makeText(contextForToast, "Enter only numbers for Subject ${i + 1} credit", Toast.LENGTH_LONG).show()
@@ -191,7 +188,7 @@ fun ByNumber() {
                             }
                         }
 
-                        if (!mark.isNullOrBlank() && !credit.isNullOrBlank()) {
+                        if (mark.isNotBlank() && credit.isNotBlank()) {
                             creditGot += gradeToPoint(mark) * credit.toInt()
                             totalCredit += credit.toInt()
                         }

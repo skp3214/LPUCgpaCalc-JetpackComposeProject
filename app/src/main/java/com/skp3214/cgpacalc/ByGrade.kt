@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -23,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -175,7 +173,7 @@ fun ByGrade() {
                         val credit = creditValues[i]
 
                         // Validate grade input
-                        if (!grade.isNullOrBlank()) {
+                        if (grade.isNotBlank()) {
                             if (!isValidGrade(grade)) {
                                 validInput = false
                                 Toast.makeText(contextForToast, "Enter only valid grade for Subject ${i + 1}", Toast.LENGTH_LONG).show()
@@ -184,7 +182,7 @@ fun ByGrade() {
                         }
 
                         // Validate credit input
-                        if (!credit.isNullOrBlank()) {
+                        if (credit.isNotBlank()) {
                             if (!credit.matches("\\d+".toRegex())) {
                                 validInput = false
                                 Toast.makeText(contextForToast, "Enter only numbers for Subject ${i + 1} credit", Toast.LENGTH_LONG).show()
@@ -192,7 +190,7 @@ fun ByGrade() {
                             }
                         }
 
-                        if (!grade.isNullOrBlank() && !credit.isNullOrBlank()) {
+                        if (grade.isNotBlank() && credit.isNotBlank()) {
                             totalGrade += gradeToPoint(grade) * credit.toInt()
                             totalCredit += credit.toInt()
                         }

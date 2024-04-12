@@ -3,10 +3,7 @@ package com.skp3214.cgpacalc
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -35,21 +32,21 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun MinimumMark() {
 
-    var marks = remember { mutableStateOf("") }
-    var grade = remember { mutableStateOf("") }
+    val marks = remember { mutableStateOf("") }
+    val grade = remember { mutableStateOf("") }
 
     fun calculateMinimumMarks(marks: String): String {
-        when (marks.uppercase()) {
-            "O" ->return "90"
-            "A+" ->return "80"
-            "A" ->return "70"
-            "B+" ->return "60"
-            "B" ->return "50"
-            "C" ->return "40"
-            "D" ->return "34"
-            "E" ->return "0"
-            "R"-> return "0"
-            else ->return "fail" // Handle other cases or invalid input
+        return when (marks.uppercase()) {
+            "O" -> "90"
+            "A+" -> "80"
+            "A" -> "70"
+            "B+" -> "60"
+            "B" -> "50"
+            "C" -> "40"
+            "D" -> "34"
+            "E" -> "0"
+            "R"-> "0"
+            else -> "fail" // Handle other cases or invalid input
         }
 
     }
@@ -137,7 +134,7 @@ fun MinimumMark() {
         )
 
         Text(
-            text = "${grade.value}",
+            text = grade.value,
             fontWeight = FontWeight.Bold,
             style = TextStyle(fontSize = 34.sp),
             color = Color(0xFFF57A2B),

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -23,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,20 +44,6 @@ fun ByGradePoint() {
     repeat(numberOfFields) {
         gradePointValues.add(it, "")
         creditValues.add(it, "")
-    }
-
-    fun gradeToPoint(grade: String): Double {
-        return when (grade.uppercase()) {
-            "10" -> 10.0
-            "9" -> 9.0
-            "8" -> 8.0
-            "7" -> 7.0
-            "6" -> 6.0
-            "5" -> 5.0
-            "4" -> 4.0
-            "3" -> 0.0
-            else -> 0.0
-        }
     }
 
     Column(
@@ -169,7 +153,7 @@ fun ByGradePoint() {
                         val credit = creditValues[i]
 
                         // Validate grade point input
-                        if (!gradePoint.isNullOrBlank()) {
+                        if (gradePoint.isNotBlank()) {
                             val gradePointDouble = gradePoint.toDoubleOrNull()
                             if (gradePointDouble == null || gradePointDouble !in 0.0..1000.0) {
                                 validInput = false
@@ -179,7 +163,7 @@ fun ByGradePoint() {
                         }
 
                         // Validate credit input
-                        if (!credit.isNullOrBlank()) {
+                        if (credit.isNotBlank()) {
                             if (!credit.matches("\\d+".toRegex())) {
                                 validInput = false
                                 Toast.makeText(contextForToast, "Enter only numbers for Subject ${i + 1} credit", Toast.LENGTH_LONG).show()
@@ -187,7 +171,7 @@ fun ByGradePoint() {
                             }
                         }
 
-                        if (!gradePoint.isNullOrBlank() && !credit.isNullOrBlank()) {
+                        if (gradePoint.isNotBlank() && credit.isNotBlank()) {
                             creditGot += gradePoint.toDouble() * credit.toInt()
                             totalCredit += credit.toInt()
                         }

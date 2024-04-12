@@ -1,13 +1,9 @@
 package com.skp3214.cgpacalc
 
 import android.widget.Toast
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -24,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -37,21 +32,21 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GradePointCalc() {
-    var marks = remember { mutableStateOf("") }
-    var grade = remember { mutableStateOf("") }
+    val marks = remember { mutableStateOf("") }
+    val grade = remember { mutableStateOf("") }
 
     fun calculateGrade(marks: String):String {
         val marksInt = marks.toIntOrNull()
-        when {
-            marksInt in 90..100 ->return "10"
-            marksInt in 80..90 ->return "9"
-            marksInt in 70..80 ->return "8"
-            marksInt in 60..70 ->return "7"
-            marksInt in 50..60 ->return "6"
-            marksInt in 40..50 ->return "5"
-            marksInt in 34..40 -> return "4"
-            marksInt in 0..34 ->return "0"
-            else ->return "Invalid Input"
+        return when (marksInt) {
+            in 90..100 -> "10"
+            in 80..90 -> "9"
+            in 70..80 -> "8"
+            in 60..70 -> "7"
+            in 50..60 -> "6"
+            in 40..50 -> "5"
+            in 34..40 -> "4"
+            in 0..34 -> "0"
+            else -> "Invalid Input"
         }
     }
 

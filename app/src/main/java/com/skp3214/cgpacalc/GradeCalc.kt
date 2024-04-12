@@ -1,13 +1,9 @@
 package com.skp3214.cgpacalc
 
 import android.widget.Toast
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -24,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -37,23 +32,23 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GradeCalc() {
-    var marks = remember { mutableStateOf("") }
-    var grade = remember { mutableStateOf("") }
+    val marks = remember { mutableStateOf("") }
+    val grade = remember { mutableStateOf("") }
 
     fun calculateGrade(marks: String): String {
         val marksInt = marks.toIntOrNull()
-        when {
-            marksInt == null -> return "Invalid Input"
-            marksInt in 100..1000 -> return "No Grade"
-            marksInt in 90..100 -> return "O"
-            marksInt in 80..90 -> return "A+"
-            marksInt in 70..80 -> return "A"
-            marksInt in 60..70 -> return "B+"
-            marksInt in 50..60 -> return "B"
-            marksInt in 40..50 -> return "C"
-            marksInt in 34..40 -> return "D"
-            marksInt in 0..34 -> return "Fail"
-            else -> return "Invalid Input"
+        return when (marksInt) {
+            null -> "Invalid Input"
+            in 100..1000 -> "No Grade"
+            in 90..100 -> "O"
+            in 80..90 -> "A+"
+            in 70..80 -> "A"
+            in 60..70 -> "B+"
+            in 50..60 -> "B"
+            in 40..50 -> "C"
+            in 34..40 -> "D"
+            in 0..34 -> "Fail"
+            else -> "Invalid Input"
         }
     }
 
