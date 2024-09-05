@@ -1,4 +1,4 @@
-package com.skp3214.cgpacalc
+package com.skp3214.cgpacalc.view
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +40,7 @@ fun ByGradePoint() {
     val gradePointValues = remember { mutableStateListOf<String>() }
     val creditValues = remember { mutableStateListOf<String>() }
     var cgpa by remember { mutableDoubleStateOf(0.0) }
+    val contextForToast = LocalContext.current.applicationContext
 
     repeat(numberOfFields) {
         gradePointValues.add(it, "")
@@ -141,7 +142,6 @@ fun ByGradePoint() {
         }
 
         Row(modifier = Modifier.padding(top = 25.dp)) {
-            val contextForToast = LocalContext.current.applicationContext
             ElevatedButton(
                 onClick = {
                     var creditGot = 0.0

@@ -1,4 +1,4 @@
-package com.skp3214.cgpacalc
+package com.skp3214.cgpacalc.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,7 +43,7 @@ fun AboutUs(){
                     "neither it ask for any-type of access. It is just a simple cgpa calculator app")
 
             Row(modifier = Modifier.padding(top=10.dp)){
-                Text(text = "Made with ❤️ by Sachin Prajapati.")
+                Text(text = "Made with ❤️ by Sachin Prajapati, Divyansh Jaiswal And Bhanu Pratap Singh.")
             }
 
         }

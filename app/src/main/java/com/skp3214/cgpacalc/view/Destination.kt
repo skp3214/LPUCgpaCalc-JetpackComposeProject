@@ -1,40 +1,40 @@
-package com.skp3214.cgpacalc
+package com.skp3214.cgpacalc.view
 
 interface Destination {
     val route:String
 }
 
-object OnBoard:Destination{
+object OnBoard: Destination {
     override val route="OnBoard"
 }
 
-object CGPA:Destination{
+object CGPA: Destination {
     override val route="CGPA"
 }
 
-object GradCalc:Destination{
+object GradCalc: Destination {
     override val route="GradeCalc"
 }
 
-object GradePointCalc:Destination{
+object GradePointCalc: Destination {
     override val route="GradePointCalc"
 }
 
-object MinimumMark:Destination{
+object MinimumMark: Destination {
     override val route="MinimumMark"
 }
 
-object ByNumber:Destination{
+object ByNumber: Destination {
     override val route="ByNumber"
 }
 
-object ByGrade:Destination{
+object ByGrade: Destination {
     override val route="ByGrade"
 }
-object ByGradePoint:Destination{
+object ByGradePoint: Destination {
     override val route="ByGradePoint"
 }
 
-object  AboutUs:Destination{
+object  AboutUs: Destination {
     override val route="AboutUs"
 }

@@ -1,4 +1,4 @@
-package com.skp3214.cgpacalc
+package com.skp3214.cgpacalc.view
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
