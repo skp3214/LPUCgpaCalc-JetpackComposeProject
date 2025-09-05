@@ -19,7 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,17 +28,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skp3214.cgpacalc.architecture.CGPACalcViewIntent
 import com.skp3214.cgpacalc.architecture.CGPACalcViewModel
 import com.skp3214.cgpacalc.architecture.CGPACalcViewState
 import com.skp3214.cgpacalc.utils.CalculationType
-import com.skp3214.cgpacalc.utils.getCgpa
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel) {
+fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
     val state = cgpaCalcViewModel.state.value as CGPACalcViewState.Success
-    val contextForToast = LocalContext.current.applicationContext
+    val contextForToast = LocalContext.current
+
+    // Clear state and set calculation type when this screen is first loaded
+    LaunchedEffect(Unit) {
+        cgpaCalcViewModel.processIntent(CGPACalcViewIntent.ClearState)
+        if (state.calculationType != CalculationType.ByGrade) {
+            cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGrade))
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -48,7 +56,7 @@ fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Your CGPA : ${"%.2f".format(getCgpa(cgpaCalcViewModel=cgpaCalcViewModel))}",
+            text = "Your CGPA : ${"%.2f".format(state.cgpa)}",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -82,8 +90,7 @@ fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel) {
         LazyColumn(modifier = Modifier.fillMaxHeight(0.83f)) {
             items(state.gradesValues.size) { index ->
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     OutlinedTextField(
@@ -108,9 +115,10 @@ fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel) {
                         ),
                     )
                     OutlinedTextField(
-                        value = state.creditValues[index].toString(),
+                        value = state.creditValues[index]?.toString() ?: "",
                         onValueChange = { value ->
-                            cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetCredit(index, value.toIntOrNull() ?: 0))
+                            val credit = value.toIntOrNull() ?: 0
+                            cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetCredit(index, credit))
                         },
                         label = { Text("Subject Credit", fontSize = 9.sp, color = Color(0xFFF57A2B)) },
                         modifier = Modifier
@@ -136,8 +144,7 @@ fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel) {
             ElevatedButton(
                 onClick = {
                     cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGrade))
-                    val cgpa= getCgpa(cgpaCalcViewModel=cgpaCalcViewModel)
-                    Toast.makeText(contextForToast, "Your CGPA: ${"%.2f".format(cgpa)}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(contextForToast, "Your CGPA: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
                 },
                 colors = ButtonDefaults.elevatedButtonColors(
                     contentColor = Color(0xffd8f3dc),
@@ -152,5 +159,3 @@ fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel) {
         }
     }
 }
-
-

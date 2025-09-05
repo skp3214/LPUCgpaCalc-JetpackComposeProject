@@ -19,11 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,19 +28,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skp3214.cgpacalc.architecture.CGPACalcViewModel
+import com.skp3214.cgpacalc.architecture.CGPACalcViewIntent
+import com.skp3214.cgpacalc.architecture.CGPACalcViewState
+import com.skp3214.cgpacalc.utils.CalculationType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ByGradePoint() {
-    val numberOfFields = 12
-    val gradePointValues = remember { mutableStateListOf<String>() }
-    val creditValues = remember { mutableStateListOf<String>() }
-    var cgpa by remember { mutableDoubleStateOf(0.0) }
-    val contextForToast = LocalContext.current.applicationContext
+fun ByGradePoint(viewModel: CGPACalcViewModel = viewModel()) {
+    val state = viewModel.state.value as CGPACalcViewState.Success
+    val contextForToast = LocalContext.current
 
-    repeat(numberOfFields) {
-        gradePointValues.add(it, "")
-        creditValues.add(it, "")
+    // Ensure we're in ByGradePoint mode and clear state from other screens
+    LaunchedEffect(Unit) {
+        viewModel.processIntent(CGPACalcViewIntent.ClearState)
+        if (state.calculationType != CalculationType.ByGradePoint) {
+            viewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGradePoint))
+        }
     }
 
     Column(
@@ -56,7 +57,7 @@ fun ByGradePoint() {
     ) {
 
         Text(
-            text = "Your CGPA : ${"%.2f".format(cgpa)}",
+            text = "Your CGPA : ${"%.2f".format(state.cgpa)}",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -88,19 +89,17 @@ fun ByGradePoint() {
         }
 
         LazyColumn(modifier = Modifier.fillMaxHeight(0.83f)) {
-
-            items(numberOfFields) { index ->
+            items(state.gradesValues.size) { index ->
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     OutlinedTextField(
-                        value = gradePointValues[index],
+                        value = state.gradesValues[index],
                         onValueChange = { value ->
-                            gradePointValues[index] = value
+                            viewModel.processIntent(CGPACalcViewIntent.SetGrade(index, value))
                         },
-                        label = { Text("Subject ${index + 1}: GradePoint ", fontSize = 9.sp ,color = Color(0xFFF57A2B)) },
+                        label = { Text("Subject ${index + 1}: GradePoint ", fontSize = 9.sp, color = Color(0xFFF57A2B)) },
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .padding(start = 10.dp, end = 5.dp),
@@ -117,11 +116,12 @@ fun ByGradePoint() {
                         ),
                     )
                     OutlinedTextField(
-                        value = creditValues[index],
+                        value = state.creditValues[index]?.toString() ?: "",
                         onValueChange = { value ->
-                            creditValues[index] = value
+                            val credit = value.toIntOrNull() ?: 0
+                            viewModel.processIntent(CGPACalcViewIntent.SetCredit(index, credit))
                         },
-                        label = { Text("Subject Credit", fontSize = 9.sp,color = Color(0xFFF57A2B)) },
+                        label = { Text("Subject Credit", fontSize = 9.sp, color = Color(0xFFF57A2B)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 5.dp, end = 10.dp),
@@ -144,42 +144,35 @@ fun ByGradePoint() {
         Row(modifier = Modifier.padding(top = 25.dp)) {
             ElevatedButton(
                 onClick = {
-                    var creditGot = 0.0
-                    var totalCredit = 0
-                    var validInput = true
+                    // Validate inputs before calculation
+                    var isValid = true
+                    var errorMessage = ""
 
-                    for (i in 0 until numberOfFields) {
-                        val gradePoint = gradePointValues[i]
-                        val credit = creditValues[i]
+                    for (i in state.gradesValues.indices) {
+                        val gradePoint = state.gradesValues[i]
+                        val credit = state.creditValues[i]
 
-                        // Validate grade point input
                         if (gradePoint.isNotBlank()) {
                             val gradePointDouble = gradePoint.toDoubleOrNull()
-                            if (gradePointDouble == null || gradePointDouble !in 0.0..1000.0) {
-                                validInput = false
-                                Toast.makeText(contextForToast, "Enter only valid grade points for Subject ${i + 1}", Toast.LENGTH_LONG).show()
+                            if (gradePointDouble == null || gradePointDouble !in 0.0..10.0) {
+                                isValid = false
+                                errorMessage = "Enter valid grade points (0-10) for Subject ${i + 1}"
                                 break
                             }
                         }
 
-                        // Validate credit input
-                        if (credit.isNotBlank()) {
-                            if (!credit.matches("\\d+".toRegex())) {
-                                validInput = false
-                                Toast.makeText(contextForToast, "Enter only numbers for Subject ${i + 1} credit", Toast.LENGTH_LONG).show()
-                                break
-                            }
-                        }
-
-                        if (gradePoint.isNotBlank() && credit.isNotBlank()) {
-                            creditGot += gradePoint.toDouble() * credit.toInt()
-                            totalCredit += credit.toInt()
+                        if (credit != null && credit < 0) {
+                            isValid = false
+                            errorMessage = "Enter valid credit for Subject ${i + 1}"
+                            break
                         }
                     }
 
-                    if (validInput) {
-                        cgpa = if (totalCredit != 0) creditGot / totalCredit else 0.0
-                        Toast.makeText(contextForToast, "Your CGPA: ${"%.2f".format(cgpa)}", Toast.LENGTH_LONG).show()
+                    if (isValid) {
+                        viewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGradePoint))
+                        Toast.makeText(contextForToast, "Your CGPA: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(contextForToast, errorMessage, Toast.LENGTH_LONG).show()
                     }
                 },
                 colors = ButtonDefaults.elevatedButtonColors(
@@ -195,4 +188,3 @@ fun ByGradePoint() {
         }
     }
 }
-

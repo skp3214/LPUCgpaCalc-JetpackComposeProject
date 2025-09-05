@@ -16,8 +16,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,28 +25,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skp3214.cgpacalc.architecture.CGPACalcViewModel
+import com.skp3214.cgpacalc.architecture.CGPACalcViewIntent
+import com.skp3214.cgpacalc.architecture.CGPACalcViewState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MinimumMark() {
+fun MinimumMark(viewModel: CGPACalcViewModel = viewModel()) {
+    val state = viewModel.state.value as CGPACalcViewState.Success
+    val contextForToast = LocalContext.current
 
-    val marks = remember { mutableStateOf("") }
-    val grade = remember { mutableStateOf("") }
-
-    fun calculateMinimumMarks(marks: String): String {
-        return when (marks.uppercase()) {
-            "O" -> "90"
-            "A+" -> "80"
-            "A" -> "70"
-            "B+" -> "60"
-            "B" -> "50"
-            "C" -> "40"
-            "D" -> "34"
-            "E" -> "0"
-            "R"-> "0"
-            else -> "fail" // Handle other cases or invalid input
-        }
-
+    // Use the first grade value for single calculation
+    val grade = state.gradesValues[0]
+    val minimumMarks = when (grade.uppercase()) {
+        "O" -> "90"
+        "A+" -> "80"
+        "A" -> "70"
+        "B+" -> "60"
+        "B" -> "50"
+        "C" -> "40"
+        "D" -> "34"
+        "E", "R" -> "0"
+        else -> if (grade.isEmpty()) "" else "Invalid Grade"
     }
 
     Column(
@@ -69,18 +68,20 @@ fun MinimumMark() {
         Text(
             text = "MINIMUM MARKS",
             fontWeight = FontWeight.Bold,
-            style = TextStyle(fontSize = 34.sp),
+            style = TextStyle(fontSize = 28.sp),
             color = Color(0xFFF57A2B),
-            modifier = Modifier.padding(top = 10.dp,bottom = 20.dp)
+            modifier = Modifier.padding(top = 10.dp)
         )
 
         OutlinedTextField(
-            value = marks.value,
-            onValueChange = { marks.value = it },
-            label = { Text(text = "Enter the Grade", color =  Color(0xFFF57A2B)) },
+            value = grade,
+            onValueChange = { value ->
+                viewModel.processIntent(CGPACalcViewIntent.SetGrade(0, value))
+            },
+            label = { Text(text = "Enter the Grade", color = Color(0xFFF57A2B)) },
             modifier = Modifier
                 .width(250.dp)
-                .padding(bottom = 20.dp),
+                .padding(top = 30.dp, bottom = 20.dp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color(0xFFF57A2B),
                 containerColor = Color(0xFFFCDFB4),
@@ -93,24 +94,15 @@ fun MinimumMark() {
                 fontSize = 20.sp
             ),
         )
-        val contextForToast = LocalContext.current.applicationContext
 
         ElevatedButton(
             onClick = {
-                val enteredMarks = marks.value.uppercase()
-
-                // Validate input
-                val validGrades = setOf("O", "A+", "A", "B+", "B", "C", "D", "E","R")
-
-                if (enteredMarks !in validGrades) {
-                    // Invalid input, display a toast message
-                    Toast.makeText(contextForToast, "Please enter only valid grades (O, A+, A, B+, B, C, D, E, R)", Toast.LENGTH_SHORT).show()
-                }
-                else {
-                    // Valid input, proceed with calculation
-                    grade.value=calculateMinimumMarks(enteredMarks)
-                    Toast.makeText(contextForToast, "Min marks needed is: ${grade.value}", Toast.LENGTH_SHORT).show()
-
+                if (grade.isEmpty()) {
+                    Toast.makeText(contextForToast, "Please enter a grade.", Toast.LENGTH_SHORT).show()
+                } else if (minimumMarks == "Invalid Grade") {
+                    Toast.makeText(contextForToast, "Please enter a valid grade (O, A+, A, B+, B, C, D, E, R).", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(contextForToast, "Minimum marks for $grade: $minimumMarks", Toast.LENGTH_SHORT).show()
                 }
             },
             colors = ButtonDefaults.elevatedButtonColors(
@@ -126,19 +118,11 @@ fun MinimumMark() {
         }
 
         Text(
-            text = "MIN MARKS NEEDED : ",
+            text = "MINIMUM MARKS : $minimumMarks",
             fontWeight = FontWeight.Bold,
-            style = TextStyle(fontSize = 24.sp),
+            style = TextStyle(fontSize = 20.sp),
             color = Color(0xFFF57A2B),
-            modifier = Modifier.padding(bottom = 10.dp)
-        )
-
-        Text(
-            text = grade.value,
-            fontWeight = FontWeight.Bold,
-            style = TextStyle(fontSize = 34.sp),
-            color = Color(0xFFF57A2B),
-            modifier = Modifier.padding(bottom = 130.dp)
+            modifier = Modifier.padding(bottom = 120.dp)
         )
     }
 }

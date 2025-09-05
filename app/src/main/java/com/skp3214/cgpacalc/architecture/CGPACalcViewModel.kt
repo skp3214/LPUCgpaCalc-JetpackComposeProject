@@ -23,6 +23,7 @@ class CGPACalcViewModel : ViewModel() {
             is CGPACalcViewIntent.SetGrade -> updateGradeInViewModel(intent.index, intent.grade)
             is CGPACalcViewIntent.SetCredit -> updateCreditInViewModel(intent.index, intent.credit)
             is CGPACalcViewIntent.CalculateCgpa -> calculateCGPAInViewModel(intent.calculationType)
+            is CGPACalcViewIntent.ClearState -> clearState()
         }
     }
 
@@ -39,6 +40,15 @@ class CGPACalcViewModel : ViewModel() {
     private fun calculateCGPAInViewModel(calculationType: CalculationType) {
         val currentState = _state.value as CGPACalcViewState.Success
         updateState(calculateCGPA(currentState, calculationType))
+    }
+
+    private fun clearState() {
+        _state.value = CGPACalcViewState.Success(
+            gradesValues = List(12) { "" },
+            creditValues = List(12) { 0 },
+            cgpa = 0.0,
+            calculationType = CalculationType.ByGrade
+        )
     }
 
     private fun updateState(newState: CGPACalcViewState) {
