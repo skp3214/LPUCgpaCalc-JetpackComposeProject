@@ -1,4 +1,4 @@
-package com.skp3214.cgpacalc.architecture
+package com.skp3214.cgpacalc.mvi
 
 import com.skp3214.cgpacalc.utils.CalculationType
 

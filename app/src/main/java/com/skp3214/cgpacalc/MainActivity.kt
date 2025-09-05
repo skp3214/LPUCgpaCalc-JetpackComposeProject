@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.skp3214.cgpacalc.architecture.CGPACalcViewModel
-import com.skp3214.cgpacalc.architecture.CGPACalcViewState
+import com.skp3214.cgpacalc.mvi.CGPACalcViewModel
+import com.skp3214.cgpacalc.mvi.CGPACalcViewState
 import com.skp3214.cgpacalc.ui.theme.CgpaCalcTheme
 import com.skp3214.cgpacalc.view.AboutUs
 import com.skp3214.cgpacalc.view.ByGrade

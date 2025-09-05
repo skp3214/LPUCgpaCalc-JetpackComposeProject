@@ -1,7 +1,6 @@
 package com.skp3214.cgpacalc.utils
 
-import com.skp3214.cgpacalc.architecture.CGPACalcViewModel
-import com.skp3214.cgpacalc.architecture.CGPACalcViewState
+import com.skp3214.cgpacalc.mvi.CGPACalcViewState
 
 
 fun updateGrade(currentState: CGPACalcViewState.Success, index: Int, grade: String): CGPACalcViewState.Success {
@@ -32,10 +31,5 @@ fun calculateCGPA(currentState: CGPACalcViewState.Success, calculationType: Calc
     val cgpa = if (totalCredits > 0) totalGradePoints / totalCredits else 0.0
 
     return currentState.copy(cgpa = cgpa, calculationType = calculationType)
-}
-
-fun getCgpa(cgpaCalcViewModel: CGPACalcViewModel): Double {
-    val state=cgpaCalcViewModel.state.value as CGPACalcViewState.Success
-    return state.cgpa
 }
 

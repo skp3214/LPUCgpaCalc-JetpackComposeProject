@@ -1,4 +1,4 @@
-package com.skp3214.cgpacalc.architecture
+package com.skp3214.cgpacalc.mvi
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

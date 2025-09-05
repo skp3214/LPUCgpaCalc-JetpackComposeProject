@@ -29,9 +29,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.skp3214.cgpacalc.architecture.CGPACalcViewModel
-import com.skp3214.cgpacalc.architecture.CGPACalcViewIntent
-import com.skp3214.cgpacalc.architecture.CGPACalcViewState
+import com.skp3214.cgpacalc.mvi.CGPACalcViewModel
+import com.skp3214.cgpacalc.mvi.CGPACalcViewIntent
+import com.skp3214.cgpacalc.mvi.CGPACalcViewState
 import com.skp3214.cgpacalc.utils.CalculationType
 
 @OptIn(ExperimentalMaterial3Api::class)
