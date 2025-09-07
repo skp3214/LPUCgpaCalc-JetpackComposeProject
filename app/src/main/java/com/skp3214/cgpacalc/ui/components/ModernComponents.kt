@@ -165,7 +165,7 @@ fun CGPADisplayCard(
                         )
                     )
                 )
-                .padding(AppDimensions.SpaceXL),
+                .padding(AppDimensions.SpaceS),
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -203,7 +203,7 @@ fun HeaderSection(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.displayMedium,
+            style = MaterialTheme.typography.displaySmall,
             color = AppColors.Primary,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
@@ -221,40 +221,16 @@ fun HeaderSection(
 }
 
 @Composable
-fun PremiumCard(
-    modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .shadow(
-                elevation = AppDimensions.ElevationS,
-                shape = RoundedCornerShape(AppDimensions.RadiusL)
-            ),
-        shape = RoundedCornerShape(AppDimensions.RadiusL),
-        colors = CardDefaults.cardColors(
-            containerColor = AppColors.Surface
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(AppDimensions.SpaceL),
-            content = content
-        )
-    }
-}
-
-@Composable
 fun SubjectInputCard(
     index: Int,
     gradeValue: String,
     creditValue: String,
     onGradeChange: (String) -> Unit,
     onCreditChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     gradeLabel: String = "Grade",
-    gradePlaceholder: String = "",
-    modifier: Modifier = Modifier
-) {
+    gradePlaceholder: String = ""
+){
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(

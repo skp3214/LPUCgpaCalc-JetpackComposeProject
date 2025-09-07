@@ -7,13 +7,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skp3214.cgpacalc.mvi.CGPACalcViewIntent
@@ -67,78 +65,21 @@ fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(AppDimensions.SpaceL),
+                .padding(AppDimensions.SpaceM),
             verticalArrangement = Arrangement.spacedBy(AppDimensions.SpaceL),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Header Section
             HeaderSection(
-                title = "Grade Calculator",
+                title = "By Grade",
                 subtitle = "Enter your grades and credits"
             )
 
             // CGPA Display Card
             CGPADisplayCard(
                 cgpa = state.cgpa,
-                modifier = Modifier.padding(vertical = AppDimensions.SpaceM)
+                modifier = Modifier.padding(vertical = AppDimensions.SpaceXXS)
             )
-
-            // Input Instructions Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = AppColors.ContainerPrimary
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = AppDimensions.ElevationXS)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(AppDimensions.SpaceL),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Letter Grades",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = AppColors.Primary,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = "(O, A+, A, B+, etc.)",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = AppColors.TextSecondary
-                        )
-                    }
-
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .height(40.dp)
-                            .width(1.dp),
-                        thickness = DividerDefaults.Thickness, color = AppColors.BorderSubtle
-                    )
-
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Credits",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = AppColors.Primary,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = "(1, 2, 3, etc.)",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = AppColors.TextSecondary
-                        )
-                    }
-                }
-            }
 
             // Subject Input Fields
             Card(
