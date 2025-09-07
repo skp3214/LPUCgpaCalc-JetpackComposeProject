@@ -1,6 +1,5 @@
 package com.skp3214.cgpacalc.view
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,20 +11,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import com.skp3214.cgpacalc.mvi.CGPACalcViewModel
 import com.skp3214.cgpacalc.mvi.CGPACalcViewIntent
 import com.skp3214.cgpacalc.mvi.CGPACalcViewState
 import com.skp3214.cgpacalc.ui.components.HeaderSection
-import com.skp3214.cgpacalc.ui.components.ModernButton
 import com.skp3214.cgpacalc.ui.components.ModernTextField
 import com.skp3214.cgpacalc.ui.theme.AppColors
 import com.skp3214.cgpacalc.ui.theme.AppDimensions
@@ -34,8 +27,6 @@ import com.skp3214.cgpacalc.ui.theme.AppDimensions
 @Composable
 fun GradePointCalc(viewModel: CGPACalcViewModel = viewModel()) {
     val state = viewModel.state.value as CGPACalcViewState.Success
-    val contextForToast = LocalContext.current
-    var isCalculating by remember { mutableStateOf(false) }
 
     // Use the first grade value for single calculation
     val marks = state.gradesValues[0]
@@ -165,36 +156,8 @@ fun GradePointCalc(viewModel: CGPACalcViewModel = viewModel()) {
                         placeholder = "85",
                         modifier = Modifier.fillMaxWidth()
                     )
-
-                    Spacer(modifier = Modifier.height(AppDimensions.SpaceXL))
-
-                    ModernButton(
-                        onClick = {
-                            val enteredMarks = marks.toIntOrNull()
-
-                            if (marks.isEmpty()) {
-                                Toast.makeText(contextForToast, "Please enter the marks.", Toast.LENGTH_SHORT).show()
-                            } else if (enteredMarks == null) {
-                                Toast.makeText(contextForToast, "Please enter numeric values for marks.", Toast.LENGTH_SHORT).show()
-                            } else if (enteredMarks < 0 || enteredMarks > 100) {
-                                Toast.makeText(contextForToast, "Please enter marks in the range 0-100.", Toast.LENGTH_SHORT).show()
-                            } else {
-                                isCalculating = true
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    delay(500)
-                                    isCalculating = false
-                                    Toast.makeText(contextForToast, "Your Grade Point is: $calculatedGradePoint", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        },
-                        text = "Calculate Grade Point",
-                        isLoading = isCalculating,
-                        modifier = Modifier.fillMaxWidth()
-                    )
                 }
             }
-
-            Spacer(modifier = Modifier.height(AppDimensions.SpaceXXL))
         }
     }
 }

@@ -8,6 +8,16 @@ fun updateGrade(currentState: CGPACalcViewState.Success, index: Int, grade: Stri
     return currentState.copy(gradesValues = newGrades)
 }
 
+fun updateGradePoint(currentState: CGPACalcViewState.Success, index: Int, gradePoint: String): CGPACalcViewState.Success {
+    val newGrades = currentState.gradesValues.toMutableList().apply { this[index] = gradePoint }
+    return currentState.copy(gradesValues = newGrades)
+}
+
+fun updateMarks(currentState: CGPACalcViewState.Success, index: Int, marks: String): CGPACalcViewState.Success {
+    val newGrades = currentState.gradesValues.toMutableList().apply { this[index] = marks }
+    return currentState.copy(gradesValues = newGrades)
+}
+
 fun updateCredit(currentState: CGPACalcViewState.Success, index: Int, credit: Int): CGPACalcViewState.Success {
     val newCredits = currentState.creditValues.toMutableList().apply { this[index] = credit }
     return currentState.copy(creditValues = newCredits)

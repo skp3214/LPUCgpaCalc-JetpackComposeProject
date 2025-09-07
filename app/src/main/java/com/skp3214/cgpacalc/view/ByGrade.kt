@@ -16,10 +16,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import com.skp3214.cgpacalc.mvi.CGPACalcViewIntent
 import com.skp3214.cgpacalc.mvi.CGPACalcViewModel
 import com.skp3214.cgpacalc.mvi.CGPACalcViewState
@@ -43,6 +39,14 @@ fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
         cgpaCalcViewModel.processIntent(CGPACalcViewIntent.ClearState)
         if (state.calculationType != CalculationType.ByGrade) {
             cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGrade))
+        }
+    }
+
+    // Show Toast and stop loading every time calculation is triggered
+    LaunchedEffect(isCalculating) {
+        if (isCalculating) {
+            Toast.makeText(contextForToast, "CGPA calculated successfully! Result: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
+            isCalculating = false
         }
     }
 
@@ -175,12 +179,6 @@ fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
                 onClick = {
                     isCalculating = true
                     cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGrade))
-
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(800)
-                        isCalculating = false
-                        Toast.makeText(contextForToast, "CGPA calculated successfully! Result: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
-                    }
                 },
                 text = "Calculate CGPA",
                 isLoading = isCalculating,

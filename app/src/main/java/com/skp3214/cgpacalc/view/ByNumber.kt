@@ -16,10 +16,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import com.skp3214.cgpacalc.mvi.CGPACalcViewIntent
 import com.skp3214.cgpacalc.mvi.CGPACalcViewModel
 import com.skp3214.cgpacalc.mvi.CGPACalcViewState
@@ -38,11 +34,19 @@ fun ByNumber(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
     val contextForToast = LocalContext.current
     var isCalculating by remember { mutableStateOf(false) }
 
-    // Ensure we're in ByNumber mode and clear state from other screens
+    // Clear state and set calculation type when this screen is first loaded
     LaunchedEffect(Unit) {
         cgpaCalcViewModel.processIntent(CGPACalcViewIntent.ClearState)
-        if (state.calculationType != CalculationType.ByNumber) {
-            cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByNumber))
+        if (state.calculationType != CalculationType.ByGrade) {
+            cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGrade))
+        }
+    }
+
+    // Show Toast and stop loading every time calculation is triggered
+    LaunchedEffect(isCalculating) {
+        if (isCalculating) {
+            Toast.makeText(contextForToast, "CGPA calculated successfully! Result: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
+            isCalculating = false
         }
     }
 
@@ -157,7 +161,7 @@ fun ByNumber(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
                             gradeValue = state.gradesValues[index],
                             creditValue = state.creditValues[index]?.toString() ?: "",
                             onGradeChange = { value ->
-                                cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetGrade(index, value))
+                                cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetMarks(index, value))
                             },
                             onCreditChange = { value ->
                                 val credit = value.toIntOrNull() ?: 0
@@ -173,42 +177,8 @@ fun ByNumber(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
             // Calculate Button
             ModernButton(
                 onClick = {
-                    // Validation logic
-                    var isValid = true
-                    var errorMessage = ""
-
-                    for (i in state.gradesValues.indices) {
-                        val mark = state.gradesValues[i]
-                        val credit = state.creditValues[i]
-
-                        if (mark.isNotBlank()) {
-                            val markInt = mark.toIntOrNull()
-                            if (markInt == null || markInt !in 0..100) {
-                                isValid = false
-                                errorMessage = "Enter valid marks (0-100) for Subject ${i + 1}"
-                                break
-                            }
-                        }
-
-                        if (credit != null && credit < 0) {
-                            isValid = false
-                            errorMessage = "Enter valid credit for Subject ${i + 1}"
-                            break
-                        }
-                    }
-
-                    if (isValid) {
-                        isCalculating = true
-                        cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByNumber))
-
-                        CoroutineScope(Dispatchers.Main).launch {
-                            delay(800)
-                            isCalculating = false
-                            Toast.makeText(contextForToast, "CGPA calculated successfully! Result: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
-                        }
-                    } else {
-                        Toast.makeText(contextForToast, errorMessage, Toast.LENGTH_LONG).show()
-                    }
+                    isCalculating = true
+                    cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByNumber))
                 },
                 text = "Calculate CGPA",
                 isLoading = isCalculating,

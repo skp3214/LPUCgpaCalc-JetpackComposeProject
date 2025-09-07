@@ -283,7 +283,7 @@ fun SubjectInputCard(
                     onValueChange = onGradeChange,
                     label = gradeLabel,
                     placeholder = gradePlaceholder,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(0.6f)
                 )
 
                 ModernTextField(
@@ -291,7 +291,7 @@ fun SubjectInputCard(
                     onValueChange = onCreditChange,
                     label = "Credits",
                     placeholder = "0",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(0.4f)
                 )
             }
         }

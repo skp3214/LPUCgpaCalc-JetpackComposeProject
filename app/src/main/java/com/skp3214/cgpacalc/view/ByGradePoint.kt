@@ -16,10 +16,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import com.skp3214.cgpacalc.mvi.CGPACalcViewModel
 import com.skp3214.cgpacalc.mvi.CGPACalcViewIntent
 import com.skp3214.cgpacalc.mvi.CGPACalcViewState
@@ -33,16 +29,24 @@ import com.skp3214.cgpacalc.utils.CalculationType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ByGradePoint(viewModel: CGPACalcViewModel = viewModel()) {
-    val state = viewModel.state.value as CGPACalcViewState.Success
+fun ByGradePoint(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
+    val state = cgpaCalcViewModel.state.value as CGPACalcViewState.Success
     val contextForToast = LocalContext.current
     var isCalculating by remember { mutableStateOf(false) }
 
-    // Ensure we're in ByGradePoint mode and clear state from other screens
+    // Clear state and set calculation type when this screen is first loaded
     LaunchedEffect(Unit) {
-        viewModel.processIntent(CGPACalcViewIntent.ClearState)
-        if (state.calculationType != CalculationType.ByGradePoint) {
-            viewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGradePoint))
+        cgpaCalcViewModel.processIntent(CGPACalcViewIntent.ClearState)
+        if (state.calculationType != CalculationType.ByGrade) {
+            cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGrade))
+        }
+    }
+
+    // Show Toast and stop loading every time calculation is triggered
+    LaunchedEffect(isCalculating) {
+        if (isCalculating) {
+            Toast.makeText(contextForToast, "CGPA calculated successfully! Result: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
+            isCalculating = false
         }
     }
 
@@ -157,14 +161,14 @@ fun ByGradePoint(viewModel: CGPACalcViewModel = viewModel()) {
                             gradeValue = state.gradesValues[index],
                             creditValue = state.creditValues[index]?.toString() ?: "",
                             onGradeChange = { value ->
-                                viewModel.processIntent(CGPACalcViewIntent.SetGrade(index, value))
+                                cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetGradePoint(index, value))
                             },
                             onCreditChange = { value ->
                                 val credit = value.toIntOrNull() ?: 0
-                                viewModel.processIntent(CGPACalcViewIntent.SetCredit(index, credit))
+                                cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetCredit(index, credit))
                             },
                             gradeLabel = "Grade Point",
-                            gradePlaceholder = "8.5"
+                            gradePlaceholder = "8"
                         )
                     }
                 }
@@ -173,42 +177,8 @@ fun ByGradePoint(viewModel: CGPACalcViewModel = viewModel()) {
             // Calculate Button
             ModernButton(
                 onClick = {
-                    // Validation logic
-                    var isValid = true
-                    var errorMessage = ""
-
-                    for (i in state.gradesValues.indices) {
-                        val gradePoint = state.gradesValues[i]
-                        val credit = state.creditValues[i]
-
-                        if (gradePoint.isNotBlank()) {
-                            val gradePointDouble = gradePoint.toDoubleOrNull()
-                            if (gradePointDouble == null || gradePointDouble !in 0.0..10.0) {
-                                isValid = false
-                                errorMessage = "Enter valid grade points (0-10) for Subject ${i + 1}"
-                                break
-                            }
-                        }
-
-                        if (credit != null && credit < 0) {
-                            isValid = false
-                            errorMessage = "Enter valid credit for Subject ${i + 1}"
-                            break
-                        }
-                    }
-
-                    if (isValid) {
-                        isCalculating = true
-                        viewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGradePoint))
-
-                        CoroutineScope(Dispatchers.Main).launch {
-                            delay(800)
-                            isCalculating = false
-                            Toast.makeText(contextForToast, "Your CGPA: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
-                        }
-                    } else {
-                        Toast.makeText(contextForToast, errorMessage, Toast.LENGTH_LONG).show()
-                    }
+                    isCalculating = true
+                    cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGradePoint))
                 },
                 text = "Calculate CGPA",
                 isLoading = isCalculating,
