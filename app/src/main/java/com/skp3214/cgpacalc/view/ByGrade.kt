@@ -1,37 +1,34 @@
 package com.skp3214.cgpacalc.view
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import com.skp3214.cgpacalc.mvi.CGPACalcViewIntent
 import com.skp3214.cgpacalc.mvi.CGPACalcViewModel
 import com.skp3214.cgpacalc.mvi.CGPACalcViewState
+import com.skp3214.cgpacalc.ui.components.CGPADisplayCard
+import com.skp3214.cgpacalc.ui.components.HeaderSection
+import com.skp3214.cgpacalc.ui.components.ModernButton
+import com.skp3214.cgpacalc.ui.components.SubjectInputCard
+import com.skp3214.cgpacalc.ui.theme.AppColors
+import com.skp3214.cgpacalc.ui.theme.AppDimensions
 import com.skp3214.cgpacalc.utils.CalculationType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,6 +36,7 @@ import com.skp3214.cgpacalc.utils.CalculationType
 fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
     val state = cgpaCalcViewModel.state.value as CGPACalcViewState.Success
     val contextForToast = LocalContext.current
+    var isCalculating by remember { mutableStateOf(false) }
 
     // Clear state and set calculation type when this screen is first loaded
     LaunchedEffect(Unit) {
@@ -48,114 +46,151 @@ fun ByGrade(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
         }
     }
 
-    Column(
+    // Modern gradient background
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        AppColors.Background,
+                        AppColors.ContainerSecondary
+                    )
+                )
+            )
     ) {
-        Text(
-            text = "Your CGPA : ${"%.2f".format(state.cgpa)}",
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            color = Color(0xFFF57A2B)
-        )
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(AppDimensions.SpaceL),
+            verticalArrangement = Arrangement.spacedBy(AppDimensions.SpaceL),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Header Section
+            HeaderSection(
+                title = "Grade Calculator",
+                subtitle = "Enter your grades and credits"
+            )
 
-        Row(modifier = Modifier.fillMaxWidth().padding(6.dp)) {
-            Column(modifier = Modifier.fillMaxWidth(0.5f)) {
-                Text(
-                    text = "Enter Grade",
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(start = 35.dp),
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFFF57A2B)
-                )
-            }
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Enter Credit",
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(start = 35.dp),
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFFF57A2B)
-                )
-            }
-        }
+            // CGPA Display Card
+            CGPADisplayCard(
+                cgpa = state.cgpa,
+                modifier = Modifier.padding(vertical = AppDimensions.SpaceM)
+            )
 
-        LazyColumn(modifier = Modifier.fillMaxHeight(0.83f)) {
-            items(state.gradesValues.size) { index ->
+            // Input Instructions Card
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = AppColors.ContainerPrimary
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = AppDimensions.ElevationXS)
+            ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(AppDimensions.SpaceL),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    OutlinedTextField(
-                        value = state.gradesValues[index],
-                        onValueChange = { value ->
-                            cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetGrade(index, value))
-                        },
-                        label = { Text("Subject ${index + 1}: Grade ", fontSize = 9.sp, color = Color(0xFFF57A2B)) },
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Letter Grades",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = AppColors.Primary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "(O, A+, A, B+, etc.)",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = AppColors.TextSecondary
+                        )
+                    }
+
+                    HorizontalDivider(
                         modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .padding(start = 10.dp, end = 5.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color(0xFFF57A2B),
-                            containerColor = Color(0xFFFCDFB4),
-                            unfocusedBorderColor = Color(0xFFF57A2B),
-                            textColor = Color(0xFFF57A2B),
-                        ),
-                        shape = RoundedCornerShape(5.dp),
-                        textStyle = LocalTextStyle.current.copy(
-                            textAlign = TextAlign.Center,
-                            fontSize = 24.sp
-                        ),
+                            .height(40.dp)
+                            .width(1.dp),
+                        thickness = DividerDefaults.Thickness, color = AppColors.BorderSubtle
                     )
-                    OutlinedTextField(
-                        value = state.creditValues[index]?.toString() ?: "",
-                        onValueChange = { value ->
-                            val credit = value.toIntOrNull() ?: 0
-                            cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetCredit(index, credit))
-                        },
-                        label = { Text("Subject Credit", fontSize = 9.sp, color = Color(0xFFF57A2B)) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 5.dp, end = 10.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color(0xFFF57A2B),
-                            containerColor = Color(0xFFFCDFB4),
-                            unfocusedBorderColor = Color(0xFFF57A2B),
-                            textColor = Color(0xFFF57A2B),
-                        ),
-                        shape = RoundedCornerShape(5.dp),
-                        textStyle = LocalTextStyle.current.copy(
-                            textAlign = TextAlign.Center,
-                            fontSize = 24.sp
-                        ),
-                    )
+
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Credits",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = AppColors.Primary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "(1, 2, 3, etc.)",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = AppColors.TextSecondary
+                        )
+                    }
                 }
             }
-        }
 
-        Row(modifier = Modifier.padding(top = 25.dp)) {
-            ElevatedButton(
-                onClick = {
-                    cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGrade))
-                    Toast.makeText(contextForToast, "Your CGPA: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
-                },
-                colors = ButtonDefaults.elevatedButtonColors(
-                    contentColor = Color(0xffd8f3dc),
-                    containerColor = Color(0xFFF57A2B)
+            // Subject Input Fields
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = AppColors.Surface
                 ),
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .height(44.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = AppDimensions.ElevationS)
             ) {
-                Text(text = "Calculate CGPA", fontSize = 20.sp)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .padding(AppDimensions.SpaceL),
+                    verticalArrangement = Arrangement.spacedBy(AppDimensions.SpaceM)
+                ) {
+                    items(state.gradesValues.size) { index ->
+                        SubjectInputCard(
+                            index = index,
+                            gradeValue = state.gradesValues[index],
+                            creditValue = state.creditValues[index]?.toString() ?: "",
+                            onGradeChange = { value ->
+                                cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetGrade(index, value))
+                            },
+                            onCreditChange = { value ->
+                                val credit = value.toIntOrNull() ?: 0
+                                cgpaCalcViewModel.processIntent(CGPACalcViewIntent.SetCredit(index, credit))
+                            },
+                            gradeLabel = "Grade",
+                            gradePlaceholder = "O, A+, A..."
+                        )
+                    }
+                }
             }
+
+            // Calculate Button
+            ModernButton(
+                onClick = {
+                    isCalculating = true
+                    cgpaCalcViewModel.processIntent(CGPACalcViewIntent.CalculateCgpa(CalculationType.ByGrade))
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(800)
+                        isCalculating = false
+                        Toast.makeText(contextForToast, "CGPA calculated successfully! Result: ${"%.2f".format(state.cgpa)}", Toast.LENGTH_LONG).show()
+                    }
+                },
+                text = "Calculate CGPA",
+                isLoading = isCalculating,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = AppDimensions.SpaceM)
+            )
+
+            // Bottom spacing for better UX
+            Spacer(modifier = Modifier.height(AppDimensions.SpaceXL))
         }
     }
 }

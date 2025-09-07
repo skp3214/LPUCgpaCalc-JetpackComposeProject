@@ -32,4 +32,3 @@ fun calculateCGPA(currentState: CGPACalcViewState.Success, calculationType: Calc
 
     return currentState.copy(cgpa = cgpa, calculationType = calculationType)
 }
-

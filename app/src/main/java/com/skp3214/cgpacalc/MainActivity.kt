@@ -83,4 +83,3 @@ fun MyNavigation(cgpaCalcViewModel: CGPACalcViewModel){
     }
 
 }
-
