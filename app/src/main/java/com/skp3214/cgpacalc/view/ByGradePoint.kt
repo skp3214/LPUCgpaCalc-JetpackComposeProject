@@ -4,8 +4,6 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -64,9 +62,8 @@ fun ByGradePoint(cgpaCalcViewModel: CGPACalcViewModel = viewModel()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(AppDimensions.SpaceM),
-            verticalArrangement = Arrangement.spacedBy(AppDimensions.SpaceL),
+            verticalArrangement = Arrangement.spacedBy(AppDimensions.SpaceM),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Header Section

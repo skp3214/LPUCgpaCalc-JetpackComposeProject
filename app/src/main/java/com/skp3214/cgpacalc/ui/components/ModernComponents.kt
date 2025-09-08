@@ -273,3 +273,40 @@ fun SubjectInputCard(
         }
     }
 }
+
+@Composable
+fun PremiumSectionCard(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, content: String) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        modifier = Modifier
+            .fillMaxSize()
+            .shadow(2.dp, RoundedCornerShape(16.dp))
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                tint = Color(0xFFF57A2B),
+                modifier = Modifier.padding(end = 12.dp)
+            )
+            Column {
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color(0xFFF57A2B)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = content,
+                    fontSize = 15.sp,
+                    color = Color(0xFF222222)
+                )
+            }
+        }
+    }
+}

@@ -1,46 +1,75 @@
-#  🎯𝐋𝐏𝐔 𝐂𝐆𝐏𝐀 𝐂𝐚𝐥𝐜𝐮𝐥𝐚𝐭𝐨𝐫- 𝐀 𝐉𝐞𝐭𝐩𝐚𝐜𝐤 𝐂𝐨𝐦𝐩𝐨𝐬𝐞 𝐌𝐕𝐈 𝐚𝐫𝐜𝐡𝐢𝐭𝐞𝐜𝐭𝐮𝐫𝐞 𝐏𝐫𝐨𝐣𝐞𝐜𝐭🌟
 
-# Download the app.
-[![CGPACalcApp](https://img.shields.io/badge/Click_Here-LPUCgpaCalc_App-orange)](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/blob/master/LpuCgpaCalc.apk)
 
-# App Demo Video
-[![CGPACalcApp](https://img.shields.io/badge/Click_Here-App_Demo_Video_App-blue)](https://www.linkedin.com/posts/skp3214_lpu-cgpa-calculator-activity-7142042621291417600-g0r5?utm_source=share&utm_medium=member_desktop)
+# 🎯 LPU CGPA Calculator — Jetpack Compose MVI Project 🌟
 
-## 🌐 **Key Features (MVI Architecture):**
-
-### 🌟 **CGPA Calculation:** 
-Effortlessly calculate your CGPA using MVI architecture, offering three methods — by **marks**, **gradepoint**, or **letter grade**. The MVI pattern ensures a smooth and reactive experience, providing you with a holistic view of your academic performance.
-
-### 🌟 **Grade on Specific Marks:**  
-Enter your marks and instantly see your corresponding grade.
-### 🌟 **GradePoint on Specific Marks:**  
-Simply input your marks, and see the corresponding gradepoint calculated in real-time. 
-
-### 🌟 **Minimum Marks for Specific Grade:**  
-Plan your academic journey by calculating the minimum marks required to achieve a particular grade. 
-
-### 🌟 **Sleek and Intuitive Interface:**  
-The CGPA calculator is built with **Jetpack Compose** and follows the MVI pattern, ensuring a responsive, user-friendly interface that guarantees a smooth and enjoyable user experience.
+A modern CGPA calculator app for LPU students, built with Jetpack Compose and a robust MVI (Model-View-Intent) architecture. Experience a sleek, intuitive UI and seamless state management for accurate CGPA calculations.
 
 ---
 
-## 🛠️𝑻𝒆𝒄𝒉 𝑺𝒕𝒂𝒄𝒌:
-
-### ⚡️𝗝𝗲𝘁𝗽𝗮𝗰𝗸 𝗖𝗼𝗺𝗽𝗼𝘀𝗲: 
-Modern UI toolkit for building beautiful and expressive user interfaces.
-### ⚡️𝗞𝗼𝘁𝗹𝗶𝗻: 
-Powerful programming language known for its conciseness and expressiveness.
-### ⚡️𝗠𝗮𝘁𝗲𝗿𝗶𝗮𝗹 𝗗𝗲𝘀𝗶𝗴𝗻: 
-Google's design system for creating consistent and appealing user experiences.
-
-## Project Preview
-
-![Screenshot (500)](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/assets/95349420/ccb5fd44-9965-471a-8d2f-d305df4a1cf9)
+## 📱 App Screenshots
 
 
-![Screenshot (501)](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/assets/95349420/c58dd9a1-7722-4b30-95ea-ac9bb0557c7b)
 
+## 🌟 Features
+- Calculate CGPA using Marks, Grade Point, or Letter Grade
+- Real-time updates and instant feedback
+- Instantly view grade and grade point from marks
+- Find minimum marks for a specific grade
+- Modern, responsive UI (Jetpack Compose + Material Design)
+- Robust state management (MVI)
 
-![Screenshot (502)](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/assets/95349420/ee37a6b9-8612-4685-89fc-95b0edd10296)
+---
 
+## 🛠️ Tech Stack
+- Jetpack Compose
+- Kotlin
+- Material Design
+- MVI Architecture
+
+---
+
+## 🚀 Getting Started
+
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject.git
+   ```
+2. **Open in Android Studio:**
+   - File > Open > Select the project folder
+3. **Build & Run:**
+   - Click the 'Run' button or use `Shift + F10`
+
+---
+
+## 🤝 How to Contribute
+
+We welcome contributions from everyone! To get started:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+**Please follow our Code of Conduct and Contributing Guidelines (if available).**
+
+If you have ideas, suggestions, or want to report bugs, please [open an issue](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/issues).
+
+---
+
+## 📚 How MVI is Implemented
+- **Model:** Represents the app state (CGPA, grades, marks, etc.)
+- **View:** Composables render the UI based on the current state
+- **Intent:** User actions (input, button clicks) are dispatched as intents
+- **State Management:** ViewModel processes intents, updates state, and triggers UI recomposition
+- **Benefits:** Predictable state transitions, easy debugging/testing, scalable for future features
+
+---
+
+## 💡 Why MVI?
+- Unidirectional Data Flow for maintainability
+- Separation of Concerns: UI, business logic, and state
+- Reactive UI: UI updates automatically as state changes
+
+---
 
