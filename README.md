@@ -8,7 +8,8 @@ A modern CGPA calculator app for LPU students, built with Jetpack Compose and a 
 
 ## 📱 App Screenshots
 
-
+<img width="2245" height="1587" alt="4" src="https://github.com/user-attachments/assets/5ac46455-ead0-4777-97da-ae662d4b5ada" />
+<img width="2245" height="1587" alt="5" src="https://github.com/user-attachments/assets/c8fa6edd-4cb8-471a-b4dd-e2099c8315f1" />
 
 ## 🌟 Features
 - Calculate CGPA using Marks, Grade Point, or Letter Grade
@@ -50,10 +51,6 @@ We welcome contributions from everyone! To get started:
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-**Please follow our Code of Conduct and Contributing Guidelines (if available).**
-
-If you have ideas, suggestions, or want to report bugs, please [open an issue](https://github.com/skp3214/LPUCgpaCalc-JetpackComposeProject/issues).
 
 ---
 
